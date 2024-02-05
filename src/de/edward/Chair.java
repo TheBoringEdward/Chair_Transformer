@@ -52,39 +52,188 @@ public class Chair {
             {-4,-2.5,9},
             {-4,2.5,9}
     };
-    //TODO: Convert the chair to polygons
 
-    private double rotatedX(int i, int j){
+    // You really shouldn't...
+    double[][][] pol = {
+            {
+                    {3,-2.5,0},
+                    {3,2.5,0},
+                    {-3,-2.5,0}
+            },
+            {
+                    {-3,-2.5,0},
+                    {-3,2.5,0},
+                    {3,2.5,0}
+            },
+            {
+                    {3,-2.5,0},
+                    {-3,-2.5,0},
+                    {-1,-1.5,1}
+            },
+            {
+                    {3,2.5,0},
+                    {-3,2.5,0},
+                    {-1,1.5,1}
+            },
+            {
+                    {-1,-1.5,1},
+                    {-1,1.5,1},
+                    {3,-2.5,0}
+            },
+            {
+                    {3,-2.5,0},
+                    {3,2.5,0},
+                    {-1,1.5,1}
+            },
+            {
+                    {-1,-1.5,1},
+                    {-1,1.5,1},
+                    {-3,-2.5,0}
+            },
+            {
+                    {-3,-2.5,0},
+                    {-3,2.5,0},
+                    {-1,1.5,1}
+            },
+            {
+                    {-1,1.5,1},
+                    {3,2.5,3},
+                    {-3,2.5,4}
+            },
+            {
+                    {-1,-1.5,1},
+                    {3,-2.5,3},
+                    {-3,-2.5,4}
+            },
+            {
+                    {-1,1.5,1},
+                    {-1,-1.5,1},
+                    {-3,-2.5,4}
+            },
+            {
+                    {-3,-2.5,4},
+                    {-3,2.5,4},
+                    {-1,1.5,1}
+            },
+            {
+                    {3,2.5,3},
+                    {3,-2.5,3},
+                    {-1,-1.5,1}
+            },
+            {
+                    {-1,1.5,1},
+                    {-1,-1.5,1},
+                    {3,2.5,3}
+            },
+            {
+                    {-3,-2.5,4},
+                    {-3,2.5,4},
+                    {3,2.5,3}
+            },
+            {
+                    {3,2.5,3},
+                    {3,-2.5,3},
+                    {-3,-2.5,4}
+            },
+            {
+                    {-3,-2.5,4},
+                    {-3,2.5,4},
+                    {-4,-2.5,9}
+            },
+            {
+                    {-4,2.5,9},
+                    {-4,-2.5,9},
+                    {-3,2.5,4}
+            },
+            {
+                    {-4,2.5,9},
+                    {-3,2.5,4},
+                    {-4,1.5,5}
+            },
+            {
+                    {-4,-2.5,9},
+                    {-3,-2.5,4},
+                    {-4,-1.5,5}
+            },
+            {
+                    {-4,2.5,9},
+                    {-4,-2.5,9},
+                    {-4,-1.5,5}
+            },
+            {
+                    {-4,2.5,9},
+                    {-4,1.5,5},
+                    {-4,-1.5,5}
+            },
+            {
+                    {-3,-2.5,4},
+                    {-3,2.5,4},
+                    {-4,-1.5,5}
+            },
+            {
+                    {-3,2.5,4},
+                    {-4,1.5,5},
+                    {-4,-1.5,5}
+            }
+    };
+
+    private double rotatedPX(int i, int j){
         // someone will hang me for this
         return Math.sqrt(Math.pow(p[i][j],2) + Math.pow(p[i][j+1],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(p[i][j],p[i][j+1])) - horRot));
     }
 
-    private  double rotatedY(int i, int j){
+    private double rotatedPolX(int i, int j, int k){
+        return Math.sqrt(Math.pow(pol[i][j][0],2) + Math.pow(pol[i][j][1],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(pol[i][j][0],pol[i][j][1])) - horRot));
+    }
+
+    private  double rotatedPY(int i, int j){
         // this isn't how it should work! yet it does?!
         if (p[i][j] > 0){
-            return Math.sqrt(Math.pow(p[i][j - 1], 2) + Math.pow(p[i][j], 2) - Math.pow(rotatedX(i, j - 1), 2));
+            return Math.sqrt(Math.pow(p[i][j - 1], 2) + Math.pow(p[i][j], 2) - Math.pow(rotatedPX(i, j - 1), 2));
         } else {
-            return Math.sqrt(Math.pow(p[i][j - 1], 2) + Math.pow(p[i][j], 2) - Math.pow(rotatedX(i, j - 1), 2)) * -1;
+            return Math.sqrt(Math.pow(p[i][j - 1], 2) + Math.pow(p[i][j], 2) - Math.pow(rotatedPX(i, j - 1), 2)) * -1;
         }
         // why does this work?
         // Answer: It doesn't. Coords positive X on the projection get inverted
     }
 
+    private double rotatedPolY(int i, int j, int k){
+        if (pol[i][j][k] > 0){
+            return Math.sqrt(Math.pow(pol[i][j][0], 2) + Math.pow(pol[i][j][1], 2) - Math.pow(rotatedPolX(i,j,0), 2));
+        } else {
+            return Math.sqrt(Math.pow(pol[i][j][0], 2) + Math.pow(pol[i][j][1], 2) - Math.pow(rotatedPolX(i,j,0), 2)) * -1;
+        }
+    }
+
+    // TODO: Fix the rotation not working properly
+
     public double getP(int i,int j) {
         if (j == 0){
             // Not quite as important
-            return rotatedX(i,j) + Xm;
+            return rotatedPX(i,j) + Xm;
         } else if (j == 1){
             // Important
-            return (((rotatedY(i,j) + Ym) * Fov) / (Fov + ((p[i][j-1] + Xm) * -1))) * width;
+            return (((rotatedPY(i,1) + Ym) * Fov) / (Fov + ((p[i][0] + Xm) * -1))) * width;
             // The way it probes the x-coordinates is seriously bad.
             // It ALWAYS assumes, the camera facing in the negative x-direction
         } else if (j == 2){
             // Important
-            return (((p[i][j]       + Zm) * Fov) / (Fov + ((rotatedX(i,j-2) + Xm) * -1))) * height;
+            return (((p[i][2]       + Zm) * Fov) / (Fov + ((rotatedPX(i,0) + Xm) * -1))) * height;
             // Ditto
         } else {
             return p[i][j];
+        }
+    }
+
+    public double getPol(int i,int j, int k){
+        if (k == 0){
+            return rotatedPolX(i,j,k) + Xm;
+        } else if (k == 1){
+            return (((rotatedPolY(i,j,k) + Ym) * Fov) / (Fov + ((pol[i][j][k-1] + Xm) * -1))) * width;
+        } else if (k == 2){
+            return (((pol[i][j][k] + Zm) * Fov) / (Fov + ((rotatedPolX(i,j,k-2) + Xm) * -1))) * height;
+        } else {
+            return pol[i][j][k];
         }
     }
 
