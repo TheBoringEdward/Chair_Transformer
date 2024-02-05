@@ -1,5 +1,4 @@
 package de.edward;
-import java.lang.Math;
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
@@ -27,17 +26,13 @@ public class Main extends JFrame {
             for (int j = 0; j <= 2; j++) {
                 System.out.println(c.getP(i, j)); // 13 , 2
             }
-            System.out.println("");
+            System.out.println();
         }
     }
 
 
-
-    private Graphics g;
-
-
     private void draw() throws InterruptedException {
-        g = this.getGraphics();
+        Graphics g = this.getGraphics();
         g.setColor(Color.black);
         for (int l = 0 ; l <= 180 ; l++) {
             Chair c = new Chair(-8, 0, -4, 3, 16, 16, l);
@@ -54,15 +49,11 @@ public class Main extends JFrame {
         }
 
          */
-            // IT WORKS!!!!!
+            // IT WORKS!!!!! (to some degree)
             for (int i = 0; i <= 23; i++) {
-                for (int j = 0; j <= 2; j++) {
-                    if (j == 2) {
-                        int[] px = {(int) c.getPol(i, 0, 1) * 10 + 400, (int) c.getPol(i, 1, 1) * 10 + 400, (int) c.getPol(i, 2, 1) * 10 + 400};
-                        int[] py = {(int) (c.getPol(i, 0, 2) * 10) * -1 + 400, (int) (c.getPol(i, 1, 2) * 10) * -1 + 400, (int) (c.getPol(i, 2, 2) * 10) * -1 + 400};
-                        g.drawPolygon(px, py, 3);
-                    }
-                }
+                int[] px = {(int)  c.getPol(i, 0, 1) * 10       + 400, (int)  c.getPol(i, 1, 1) * 10       + 400, (int)  c.getPol(i, 2, 1) * 10 + 400};
+                int[] py = {(int) (c.getPol(i, 0, 2) * 10) * -1 + 400, (int) (c.getPol(i, 1, 2) * 10) * -1 + 400, (int) (c.getPol(i, 2, 2) * 10) * -1 + 400};
+                g.drawPolygon(px, py, 3);
             }
             TimeUnit.MILLISECONDS.sleep(250);
             g.setColor(Color.WHITE);
@@ -87,7 +78,7 @@ public class Main extends JFrame {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         Main m = new Main();
         m.setSize(800,800);
         m.setResizable(false);
