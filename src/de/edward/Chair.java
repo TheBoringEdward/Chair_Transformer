@@ -62,10 +62,12 @@ public class Chair {
     private  double rotatedY(int i, int j){
         // this isn't how it should work! yet it does?!
         if (p[i][j] > 0){
-            return Math.sqrt(Math.pow(p[i][j-1],2) + Math.pow(p[i][j],2) - Math.pow(rotatedX(i,j-1),2));
+            return Math.sqrt(Math.pow(p[i][j - 1], 2) + Math.pow(p[i][j], 2) - Math.pow(rotatedX(i, j - 1), 2));
         } else {
             return Math.sqrt(Math.pow(p[i][j - 1], 2) + Math.pow(p[i][j], 2) - Math.pow(rotatedX(i, j - 1), 2)) * -1;
         }
+        // why does this work?
+        // Answer: It doesn't. Coords positive X on the projection get inverted
     }
 
     public double getP(int i,int j) {
@@ -79,7 +81,7 @@ public class Chair {
             // It ALWAYS assumes, the camera facing in the negative x-direction
         } else if (j == 2){
             // Important
-            return (((p[i][j] + Zm) * Fov) / (Fov + ((p[i][j-2] + Xm) * -1))) * height;
+            return (((p[i][j]       + Zm) * Fov) / (Fov + ((rotatedX(i,j-2) + Xm) * -1))) * height;
             // Ditto
         } else {
             return p[i][j];

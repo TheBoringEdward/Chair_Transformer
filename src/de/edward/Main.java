@@ -1,7 +1,12 @@
 package de.edward;
 import java.lang.Math;
+import javax.swing.*;
+import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
-public class Main {
+public class Main extends JFrame {
+
+
     Main (){
         System.out.println("HOI!\n");
         /*
@@ -17,16 +22,65 @@ public class Main {
 
         Chair c = new Chair(-8,0,-4, 2, 16, 16, 45);
 
-        for(int i = 0 ; i <= 13 ; i++ ){
+        for (int i = 0; i <= 13; i++) {
             System.out.println(i + 1 + "."); //prints no. of point
-            for(int j = 0 ; j <= 2 ; j++){
-                System.out.println(c.getP(i,j)); // 13 , 2
+            for (int j = 0; j <= 2; j++) {
+                System.out.println(c.getP(i, j)); // 13 , 2
             }
             System.out.println("");
         }
     }
-    public static void main(String[] args) {
+
+
+
+    private Graphics g;
+
+    /*
+    private void draw() throws InterruptedException {
+        g = this.getGraphics();
+        g.setColor(Color.black);
+        for (int k = 0 ; k < 180 ; k++) {
+            Chair c = new Chair(-8,0,-4, 2, 16, 16, k);
+            for (int i = 0; i <= 13; i++) {
+                System.out.println(i + 1 + "."); //prints no. of point
+                for (int j = 0; j <= 2; j++) {
+                    System.out.println(c.getP(i, j)); // 13 , 2
+                    if (j == 2) {
+                        g.fillOval((((int) c.getP(i, j - 1) * 10) + 400), ((int) c.getP(i, j) * 10) * -1 + 400, 5, 5);
+                    }
+                }
+                System.out.println("");
+            }
+            TimeUnit.MILLISECONDS.sleep(500);
+            g.setColor(Color.WHITE);
+            g.fillRect(0,0,800,800);
+            g.setColor(Color.BLACK);
+        }
+    }
+
+
+    @Override public void paint(Graphics g){
+        setBackground(Color.white);
+        try {
+            draw();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+     */
+
+    public static void main(String[] args) throws InterruptedException {
         Main m = new Main();
+        /*
+        m.setSize(800,800);
+        m.setResizable(false);
+        m.setTitle("Brick1");
+        m.setVisible(true);
+        m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        m.draw();
+
+         */
         System.out.println("\n\n ======= This code has been provided by TheBoringEdward =======\n");
     }
 }
