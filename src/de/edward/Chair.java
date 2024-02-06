@@ -25,7 +25,6 @@ public class Chair {
         this.width = width/2;
         this.height = height/2;
         this.horRot = horRot;
-
     }
 
     // some programmer be crying and pissing themself out there, if they ever get to see my code
@@ -178,54 +177,35 @@ public class Chair {
             }
     };
 
-    private double rotatedPX(int i, int j){
-        // someone will hang me for this
-        return Math.sqrt(Math.pow(p[i][j],2) + Math.pow(p[i][j+1],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(p[i][j],p[i][j+1])) - horRot));
+    private double rotatedPX(int i){
+        return Math.sqrt(Math.pow(p[i][0],2) + Math.pow(p[i][1],2)) * Math.cos(Math.toRadians(180 - Math.toDegrees(Math.atan2(p[i][0],p[i][1])) - horRot));
     }
 
-    private  double rotatedPY(int i, int j){
-        // this isn't how it should work! yet it does?!
-        if (p[i][j] > 0){
-            return Math.sqrt(Math.pow(p[i][j - 1], 2) + Math.pow(p[i][j], 2) - Math.pow(rotatedPX(i, j - 1), 2));
-        } else {
-            return Math.sqrt(Math.pow(p[i][j - 1], 2) + Math.pow(p[i][j], 2) - Math.pow(rotatedPX(i, j - 1), 2)) * -1;
-        }
-        // why does this work?
-        // Answer: It doesn't. Something is going terribly wrong.
+    private  double rotatedPY(int i){
+        return Math.sqrt(Math.pow(p[i][0],2) + Math.pow(p[i][1],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(p[i][0],p[i][1])) - horRot));
     }
 
     private double rotatedPolX(int i, int j){
         return Math.sqrt(Math.pow(pol[i][j][0],2) + Math.pow(pol[i][j][1],2)) * Math.cos(Math.toRadians(180 - Math.toDegrees(Math.atan2(pol[i][j][0],pol[i][j][1])) - horRot));
     }
 
-    private double rotatedPolY(int i, int j, int k){
-        /*
-        if (pol[i][j][k] > 0){
-            return Math.sqrt(Math.pow(pol[i][j][0], 2) + Math.pow(pol[i][j][1], 2) - Math.pow(rotatedPolX(i,j), 2));
-        } else {
-            return Math.sqrt(Math.pow(pol[i][j][0], 2) + Math.pow(pol[i][j][1], 2) - Math.pow(rotatedPolX(i,j), 2)) * -1;
-        }
-         */
+    private double rotatedPolY(int i, int j){
         return Math.sqrt(Math.pow(pol[i][j][0],2) + Math.pow(pol[i][j][1],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(pol[i][j][0],pol[i][j][1])) - horRot));
     }
-
-    // TODO: Fix the rotation not working properly
 
     public double getP(int i,int j) {
         if (j == 0){
             // Not quite as important
-            return rotatedPX(i,j) + Xm;
+            return rotatedPX(i) + Xm;
         } else if (j == 1){
             // Important
-            return (((rotatedPY(i,1) + Ym) * Fov) / (Fov + ((p[i][0] + Xm) * -1))) * width;
+            return (((rotatedPY(i) + Ym) * Fov) / (Fov + ((p[i][0] + Xm) * -1))) * width;
             // The way it probes the x-coordinates is seriously bad.
             // It ALWAYS assumes, the camera facing in the negative x-direction
-        } else if (j == 2){
-            // Important
-            return (((p[i][2]       + Zm) * Fov) / (Fov + ((rotatedPX(i,0) + Xm) * -1))) * height;
-            // Ditto
         } else {
-            return p[i][j];
+            // Important
+            return (((p[i][2] + Zm) * Fov) / (Fov + ((rotatedPX(i) + Xm) * -1))) * height;
+            // Ditto
         }
     }
 
@@ -233,7 +213,7 @@ public class Chair {
         if (k == 0){
             return rotatedPolX(i,j) + Xm;
         } else if (k == 1){
-            return (((rotatedPolY(i,j,k) + Ym) * Fov) / (Fov + ((pol[i][j][0] + Xm) * -1))) * width;
+            return (((rotatedPolY(i,j) + Ym) * Fov) / (Fov + ((pol[i][j][0] + Xm) * -1))) * width;
         } else {
             return (((pol[i][j][k] + Zm) * Fov) / (Fov + ((rotatedPolX(i,j) + Xm) * -1))) * height;
         }
