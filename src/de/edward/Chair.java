@@ -195,15 +195,18 @@ public class Chair {
     }
 
     private double rotatedPolX(int i, int j){
-        return Math.sqrt(Math.pow(pol[i][j][0],2) + Math.pow(pol[i][j][1],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(pol[i][j][0],pol[i][j][1])) - horRot));
+        return Math.sqrt(Math.pow(pol[i][j][0],2) + Math.pow(pol[i][j][1],2)) * Math.cos(Math.toRadians(180 - Math.toDegrees(Math.atan2(pol[i][j][0],pol[i][j][1])) - horRot));
     }
 
     private double rotatedPolY(int i, int j, int k){
+        /*
         if (pol[i][j][k] > 0){
             return Math.sqrt(Math.pow(pol[i][j][0], 2) + Math.pow(pol[i][j][1], 2) - Math.pow(rotatedPolX(i,j), 2));
         } else {
             return Math.sqrt(Math.pow(pol[i][j][0], 2) + Math.pow(pol[i][j][1], 2) - Math.pow(rotatedPolX(i,j), 2)) * -1;
         }
+         */
+        return Math.sqrt(Math.pow(pol[i][j][0],2) + Math.pow(pol[i][j][1],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(pol[i][j][0],pol[i][j][1])) - horRot));
     }
 
     // TODO: Fix the rotation not working properly
