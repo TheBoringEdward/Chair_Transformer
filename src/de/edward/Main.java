@@ -19,7 +19,7 @@ public class Main extends JFrame {
 
         System.out.println("HOI!\n");
 
-        Chair c = new Chair(-8,0,-4, 2, 16, 16, 45);
+        Chair c = new Chair(-8,0,-4, 2, 16, 16, 45, 0, 0);
 
         for (int i = 0; i <= 13; i++) {
             System.out.println(i + 1 + "."); //prints no. of point
@@ -57,10 +57,10 @@ public class Main extends JFrame {
         @Override
         protected void paintComponent(final Graphics g) {
             super.paintComponent(g);
-            final Chair c = new Chair(-15, 0, -4, 7, 16, 16, this.currentDegrees);
+            final Chair c = new Chair(-15, 0, -4, 7, 16, 16,this.currentDegrees, this.currentDegrees, this.currentDegrees);
             for (int i = 0; i <= 23; i++) {
-                int[] px = {(int) (c.getPol(i, 0, 1) * 10) + 400, (int) (c.getPol(i, 1, 1) * 10) + 400, (int) (c.getPol(i, 2, 1) * 10) + 400};
-                int[] py = {(int) (c.getPol(i, 0, 2) * 10) * -1 + 400, (int) (c.getPol(i, 1, 2) * 10) * -1 + 400, (int) (c.getPol(i, 2, 2) * 10) * -1 + 400};
+                int[] px = {(int) ((c.getPol(i, 0, 1) * 10) + 400), (int) ((c.getPol(i, 1, 1) * 10) + 400), (int) ((c.getPol(i, 2, 1) * 10) + 400)};
+                int[] py = {(int) ((c.getPol(i, 0, 2) * 10) * -1 + 400), (int) ((c.getPol(i, 1, 2) * 10) * -1 + 400), (int) ((c.getPol(i, 2, 2) * 10) * -1 + 400)};
                 g.drawPolygon(px, py, 3);
             }
             repaint();

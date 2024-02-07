@@ -11,10 +11,11 @@ public class Chair {
     double width;
     // Screen height
     double height;
-    // Horizontal Rotation
-    double horRot;
+    double zRotation;
+    double xRotation;
+    double yRotation;
 
-    Chair(double Xm, double Ym, double Zm, double Fov, double width, double height, double horRot){
+    Chair(double Xm, double Ym, double Zm, double Fov, double width, double height, double zRotation, double xRotation, double yRotation){
         this.Xm = Xm;
         this.Ym = Ym;
         this.Zm = Zm;
@@ -24,7 +25,9 @@ public class Chair {
         // Have to adjust for the quarters of the screen
         this.width = width/2;
         this.height = height/2;
-        this.horRot = horRot;
+        this.zRotation = zRotation - 90;
+        this.xRotation = xRotation + 180;
+        this.yRotation = yRotation + 180;
     }
 
     // some programmer be crying and pissing themself out there, if they ever get to see my code
@@ -178,19 +181,38 @@ public class Chair {
     };
 
     private double rotatedPX(int i){
-        return Math.sqrt(Math.pow(p[i][0],2) + Math.pow(p[i][1],2)) * Math.cos(Math.toRadians(180 - Math.toDegrees(Math.atan2(p[i][0],p[i][1])) - horRot));
+        return Math.sqrt(Math.pow(p[i][0],2) + Math.pow(p[i][1],2)) * Math.cos(Math.toRadians(180 - Math.toDegrees(Math.atan2(p[i][0],p[i][1])) - zRotation));
     }
 
     private  double rotatedPY(int i){
-        return Math.sqrt(Math.pow(p[i][0],2) + Math.pow(p[i][1],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(p[i][0],p[i][1])) - horRot));
+        return Math.sqrt(Math.pow(p[i][0],2) + Math.pow(p[i][1],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(p[i][0],p[i][1])) - zRotation));
     }
 
-    private double rotatedPolX(int i, int j){
-        return Math.sqrt(Math.pow(pol[i][j][0],2) + Math.pow(pol[i][j][1],2)) * Math.cos(Math.toRadians(180 - Math.toDegrees(Math.atan2(pol[i][j][0],pol[i][j][1])) - horRot));
+    // z-rotation
+    private double zRotatedPolX(int i, int j){
+        return Math.sqrt(Math.pow(pol[i][j][0],2) + Math.pow(pol[i][j][1],2)) * Math.cos(Math.toRadians(180 - Math.toDegrees(Math.atan2(pol[i][j][0],pol[i][j][1])) - zRotation));
     }
 
-    private double rotatedPolY(int i, int j){
-        return Math.sqrt(Math.pow(pol[i][j][0],2) + Math.pow(pol[i][j][1],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(pol[i][j][0],pol[i][j][1])) - horRot));
+    private double zRotatedPolY(int i, int j){
+        return Math.sqrt(Math.pow(pol[i][j][0],2) + Math.pow(pol[i][j][1],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(pol[i][j][0],pol[i][j][1])) - zRotation));
+    }
+
+    // x-rotation
+    private double xRotatedPolZ(int i, int j){
+        return Math.sqrt(Math.pow(zRotatedPolY(i,j),2) + Math.pow(pol[i][j][2],2)) * Math.cos(Math.toRadians(180 - Math.toDegrees(Math.atan2(zRotatedPolY(i,j),pol[i][j][2])) - xRotation));
+    }
+
+    private double xRotatedPolY(int i, int j){
+        return Math.sqrt(Math.pow(zRotatedPolY(i,j),2) + Math.pow(pol[i][j][2],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(zRotatedPolY(i,j),pol[i][j][2])) - xRotation));
+    }
+
+    //y-rotation
+    private double yRotatedPolZ(int i, int j){
+        return Math.sqrt(Math.pow(zRotatedPolX(i,j),2) + Math.pow(xRotatedPolZ(i,j),2)) * Math.cos(Math.toRadians(180 - Math.toDegrees(Math.atan2(zRotatedPolX(i,j),xRotatedPolZ(i,j))) - yRotation));
+    }
+
+    private double yRotatedPolX(int i, int j){
+        return Math.sqrt(Math.pow(zRotatedPolX(i,j),2) + Math.pow(xRotatedPolZ(i,j),2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(zRotatedPolX(i,j),xRotatedPolZ(i,j))) - yRotation));
     }
 
     public double getP(int i,int j) {
@@ -211,11 +233,11 @@ public class Chair {
 
     public double getPol(int i,int j, int k){
         if (k == 0){
-            return rotatedPolX(i,j) + Xm;
+            return yRotatedPolX(i,j) + Xm;
         } else if (k == 1){
-            return (((rotatedPolY(i,j) + Ym) * Fov) / (Fov + ((pol[i][j][0] + Xm) * -1))) * width;
+            return (((xRotatedPolY(i,j) + Ym) * Fov) / (Fov + ((yRotatedPolX(i,j) + Xm) * -1))) * width;
         } else {
-            return (((pol[i][j][k] + Zm) * Fov) / (Fov + ((rotatedPolX(i,j) + Xm) * -1))) * height;
+            return (((yRotatedPolZ(i,j) + Zm) * Fov) / (Fov + ((yRotatedPolX(i,j) + Xm) * -1))) * height;
         }
     }
 
