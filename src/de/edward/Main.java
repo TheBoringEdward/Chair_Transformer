@@ -1,12 +1,22 @@
 package de.edward;
-import javax.swing.*;
-import java.awt.*;
 import java.util.concurrent.TimeUnit;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import java.awt.Graphics;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class Main extends JFrame {
 
 
-    Main (){
+    public Main(){
+
+        super("Chair");
+        super.setBounds(0, 0, 800, 800);
+        super.setLocationRelativeTo(null);
+        super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super.setResizable(false);
+
         System.out.println("HOI!\n");
 
         Chair c = new Chair(-8,0,-4, 2, 16, 16, 45);
@@ -20,43 +30,45 @@ public class Main extends JFrame {
         }
     }
 
+    public static void main(String[] args) {
+        final Main m = new Main();
+        final Draw draw = new Draw();
+        draw.setBounds(0, 0, 800, 800);
+        draw.setVisible(true);
+        m.add(draw);
+        m.setVisible(true);
+        //m.draw();
+        System.out.println("\n\n ======= This code has been provided by TheBoringEdward with the help of a fellow =======\n");
+    }
+
 // TODO: Speed up rendering of polygons
-    private void draw() throws InterruptedException {
-        Graphics g = this.getGraphics();
-        g.setColor(Color.black);
-        // IT WORKS!!!!! (to some degree)
-        for (double l = 0 ; l <= 360*4 ; l += 0.25) {
-            Chair c = new Chair(-15, 0, -4, 7, 16, 16, l);
+
+    private static final class Draw extends JLabel implements Runnable {
+
+        private double currentDegrees;
+
+        public Draw() {
+            // start calculating task
+            final ScheduledExecutorService taskExecutor = Executors.newScheduledThreadPool(1);
+            taskExecutor.scheduleAtFixedRate(this, 0, 15, TimeUnit.MILLISECONDS);
+        }
+
+
+        @Override
+        protected void paintComponent(final Graphics g) {
+            super.paintComponent(g);
+            final Chair c = new Chair(-15, 0, -4, 7, 16, 16, this.currentDegrees);
             for (int i = 0; i <= 23; i++) {
-                int[] px = {(int) (c.getPol(i, 0, 1) * 10)      + 400, (int) (c.getPol(i, 1, 1) * 10)      + 400, (int) (c.getPol(i, 2, 1) * 10)      + 400};
+                int[] px = {(int) (c.getPol(i, 0, 1) * 10) + 400, (int) (c.getPol(i, 1, 1) * 10) + 400, (int) (c.getPol(i, 2, 1) * 10) + 400};
                 int[] py = {(int) (c.getPol(i, 0, 2) * 10) * -1 + 400, (int) (c.getPol(i, 1, 2) * 10) * -1 + 400, (int) (c.getPol(i, 2, 2) * 10) * -1 + 400};
                 g.drawPolygon(px, py, 3);
             }
-            TimeUnit.MILLISECONDS.sleep(12);
-            g.setColor(Color.WHITE);
-            g.fillRect(0,0,800,800);
-            g.setColor(Color.BLACK);
+            repaint();
         }
-    }
 
-
-    @Override public void paint(Graphics g){
-        setBackground(Color.white);
-        try {
-            draw();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        @Override
+        public void run() {
+            currentDegrees += 0.25;
         }
-    }
-
-    public static void main(String[] args) {
-        Main m = new Main();
-        m.setSize(800,800);
-        m.setResizable(false);
-        m.setTitle("Chair");
-        m.setVisible(true);
-        m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //m.draw();
-        System.out.println("\n\n ======= This code has been provided by TheBoringEdward =======\n");
     }
 }
