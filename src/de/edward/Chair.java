@@ -1,4 +1,6 @@
 package de.edward;
+import java.awt.*;
+import static java.awt.Color.*;
 
 public class Chair {
     // Origin-of-the-chair Movement
@@ -15,14 +17,14 @@ public class Chair {
     double xRotation;
     double yRotation;
 
-    Chair(double Xm, double Ym, double Zm, double Fov, double width, double height, double zRotation, double xRotation, double yRotation){
+    Chair(double Xm, double Ym, double Zm, double Fov, double width, double height, double zRotation, double yRotation, double xRotation){
         this.Xm = Xm;
         this.Ym = Ym;
         this.Zm = Zm;
         // The camera always assumes, that the chair is in front of the camera.
         // God knows what might happen, if this condition isn't met.
         this.Fov = Fov;
-        // Have to adjust for the quarters of the screen
+        // Have to adjust for the centre of the screen
         this.width = width/2;
         this.height = height/2;
         this.zRotation = zRotation - 90;
@@ -30,7 +32,7 @@ public class Chair {
         this.yRotation = yRotation + 180;
     }
 
-    // some programmer be crying and pissing themself out there, if they ever get to see my code
+    // Someone will hang me for this.
 
     // 14 points
     // {x,       y,     z}
@@ -58,126 +60,156 @@ public class Chair {
     // You really shouldn't...
     // This array saves all the polygons of the chair
     double[][][] pol = {
-            {
-                    {3,-2.5,0},
+            {   //  Bottom
                     {3,2.5,0},
+                    {3,-2.5,0},
                     {-3,-2.5,0}
             },
-            {
+            {   //  Bottom
                     {-3,-2.5,0},
                     {-3,2.5,0},
                     {3,2.5,0}
             },
-            {
-                    {3,-2.5,0},
+            {   //  Bottom Side
                     {-3,-2.5,0},
+                    {3,-2.5,0},
                     {-1,-1.5,1}
             },
-            {
+            {   //  Bottom Side
                     {3,2.5,0},
                     {-3,2.5,0},
                     {-1,1.5,1}
             },
-            {
-                    {-1,-1.5,1},
+            {   // Bottom Front
                     {-1,1.5,1},
+                    {-1,-1.5,1},
                     {3,-2.5,0}
             },
-            {
+            {   // Bottom Front
                     {3,-2.5,0},
                     {3,2.5,0},
                     {-1,1.5,1}
             },
-            {
+            {   // Bottom Back
                     {-1,-1.5,1},
                     {-1,1.5,1},
                     {-3,-2.5,0}
             },
-            {
-                    {-3,-2.5,0},
+            {   // Bottom Back
                     {-3,2.5,0},
+                    {-3,-2.5,0},
                     {-1,1.5,1}
             },
-            {
-                    {-1,1.5,1},
+            {   // Bottom Side Panel
                     {3,2.5,3},
+                    {-1,1.5,1},
                     {-3,2.5,4}
             },
-            {
+            {   // Bottom Side Panel
                     {-1,-1.5,1},
                     {3,-2.5,3},
                     {-3,-2.5,4}
             },
-            {
+            {   // Ass
                     {-1,1.5,1},
                     {-1,-1.5,1},
                     {-3,-2.5,4}
             },
-            {
+            {   // Ass
                     {-3,-2.5,4},
                     {-3,2.5,4},
                     {-1,1.5,1}
             },
-            {
+            {   // Dick
                     {3,2.5,3},
                     {3,-2.5,3},
                     {-1,-1.5,1}
             },
-            {
-                    {-1,1.5,1},
+            {   // Dick
                     {-1,-1.5,1},
+                    {-1,1.5,1},
                     {3,2.5,3}
             },
-            {
-                    {-3,-2.5,4},
+            {    // Surface
                     {-3,2.5,4},
+                    {-3,-2.5,4},
                     {3,2.5,3}
             },
-            {
-                    {3,2.5,3},
+            {   // Surface
                     {3,-2.5,3},
+                    {3,2.5,3},
                     {-3,-2.5,4}
             },
-            {
+            {   // Upper Front
                     {-3,-2.5,4},
                     {-3,2.5,4},
                     {-4,-2.5,9}
             },
-            {
+            {   // Upper Front
                     {-4,2.5,9},
                     {-4,-2.5,9},
                     {-3,2.5,4}
             },
-            {
+            {   // Upper Side Panel?
                     {-4,2.5,9},
                     {-3,2.5,4},
                     {-4,1.5,5}
             },
-            {
-                    {-4,-2.5,9},
+            {   // Upper Side Panel?
                     {-3,-2.5,4},
-                    {-4,-1.5,5}
-            },
-            {
-                    {-4,2.5,9},
                     {-4,-2.5,9},
                     {-4,-1.5,5}
             },
-            {
+            {   // Upper Upper Back
+                    {-4,-2.5,9},
+                    {-4,2.5,9},
+                    {-4,-1.5,5}
+            },
+            {   // Upper Upper Back
                     {-4,2.5,9},
                     {-4,1.5,5},
                     {-4,-1.5,5}
             },
-            {
-                    {-3,-2.5,4},
+            {   // Lower Upper Back
                     {-3,2.5,4},
+                    {-3,-2.5,4},
                     {-4,-1.5,5}
             },
-            {
-                    {-3,2.5,4},
+            {   // Lower Upper Back
                     {-4,1.5,5},
+                    {-3,2.5,4},
                     {-4,-1.5,5}
             }
+    };
+
+    // My naming convention is a fucking fever-dream
+
+    // "Texture"
+    Color[] polColour = {
+            BLACK,
+            BLACK,
+            BLUE,
+            BLUE,
+            GREEN,
+            GREEN,
+            GREEN,
+            GREEN,
+            ORANGE,
+            ORANGE,
+            BLUE,
+            BLUE,
+            BLUE,
+            BLUE,
+            RED,
+            RED,
+            GREEN,
+            GREEN,
+            ORANGE,
+            ORANGE,
+            YELLOW,
+            YELLOW,
+            PINK,
+            PINK
     };
 
     private double rotatedPX(int i){
@@ -240,22 +272,5 @@ public class Chair {
             return (((yRotatedPolZ(i,j) + Zm) * Fov) / (Fov + ((yRotatedPolX(i,j) + Xm) * -1))) * height;
         }
     }
-
-    /* //god forbid, I know that arrays exist
-    double[] p1 = {3,-2.5,0};
-    double[] p2 = {3,2.5,0};
-    double[] p3 = {-3,-2.5,0};
-    double[] p4 = {-3,2.5,0};
-    double[] p5 = {-1,-1.5,1};
-    double[] p6 = {-1,1.5,1};
-    double[] p7 = {3,-2.5,3};
-    double[] p8 = {3,2.5,3};
-    double[] p9 = {-3,-2.5,4};
-    double[] p10 = {-3,2.5,4};
-    double[] p11 = {-4,-1.5,5};
-    double[] p12 = {-4,1.5,5};
-    double[] p13 = {-4,-2.5,9};
-    double[] p14 = {-4,2.5,9};
-     */
 
 }
