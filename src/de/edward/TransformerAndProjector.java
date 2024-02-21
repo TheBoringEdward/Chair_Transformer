@@ -50,29 +50,47 @@ public class TransformerAndProjector {
         return Math.sqrt(Math.pow(zRotatedPolY(i,j),2) + Math.pow(pol[i][j][2],2)) * Math.cos(Math.toRadians(180 - Math.toDegrees(Math.atan2(zRotatedPolY(i,j),pol[i][j][2])) - xRotation));
     }
 
-    private double xRotatedPolY(int i, int j){
+    //xRotatedPolY
+    private double FinalRotatedY(int i, int j){
         return Math.sqrt(Math.pow(zRotatedPolY(i,j),2) + Math.pow(pol[i][j][2],2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(zRotatedPolY(i,j),pol[i][j][2])) - xRotation));
     }
 
     //y-rotation
-    private double yRotatedPolZ(int i, int j){
+    //yRotatedPolZ
+    private double FinalRotatedZ(int i, int j){
         return Math.sqrt(Math.pow(zRotatedPolX(i,j),2) + Math.pow(xRotatedPolZ(i,j),2)) * Math.cos(Math.toRadians(180 - Math.toDegrees(Math.atan2(zRotatedPolX(i,j),xRotatedPolZ(i,j))) - yRotation));
     }
 
-    private double yRotatedPolX(int i, int j){
+    //yRotatedPolX
+    private double FinalRotatedX(int i, int j){
         return Math.sqrt(Math.pow(zRotatedPolX(i,j),2) + Math.pow(xRotatedPolZ(i,j),2)) * Math.sin(Math.toRadians(180 - Math.toDegrees(Math.atan2(zRotatedPolX(i,j),xRotatedPolZ(i,j))) - yRotation));
     }
 
     // The way it probes the x-coordinates is seriously bad.
     // It ALWAYS assumes, the camera facing in the negative x-direction
-    public double getPol(int i,int j, int k){
+    public double getProjectedPol(int i, int j, int k){
         if (k == 0){
-            return yRotatedPolX(i,j) + Xm;
+            return FinalRotatedX(i,j) + Xm;
         } else if (k == 1){
-            return (((xRotatedPolY(i,j) + Ym) * Fov) / (Fov + ((yRotatedPolX(i,j) + Xm) * -1))) * width;
+            return (((FinalRotatedY(i,j) + Ym) * Fov) / (Fov + ((FinalRotatedX(i,j) + Xm) * -1))) * width;
         } else {
-            return (((yRotatedPolZ(i,j) + Zm) * Fov) / (Fov + ((yRotatedPolX(i,j) + Xm) * -1))) * height;
+            return (((FinalRotatedZ(i,j) + Zm) * Fov) / (Fov + ((FinalRotatedX(i,j) + Xm) * -1))) * height;
         }
+    }
+    // i = polygon of model, j = point of polygon, k = x0/x1/x2 coord of point
+
+    public double[] getMid(int i){
+        //x0+x1+x2/3=midX
+        double midX = (FinalRotatedX(i,0) + Xm) + (FinalRotatedX(i,1) + Xm) + (FinalRotatedX(i,2) + Xm) / 3;
+        double midY = (FinalRotatedY(i,0) + Xm) + (FinalRotatedY(i,1) + Xm) + (FinalRotatedY(i,2) + Xm) / 3;
+        double midZ = (FinalRotatedZ(i,0) + Xm) + (FinalRotatedZ(i,1) + Xm) + (FinalRotatedZ(i,2) + Xm) / 3;
+        return new double[]{midX,midY,midZ};
+    }
+
+    public double getMidDistance(int i){
+        // the square calculation might not even be necessary, as we only arbitrarily probe for distance,
+        // and don't look at the actual distance
+        return Math.sqrt(((Math.pow(getMid(i)[0],2))+(Math.pow(getMid(i)[0],2))+(Math.pow(getMid(i)[0],2))));
     }
 
 }

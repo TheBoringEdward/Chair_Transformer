@@ -32,8 +32,6 @@ public class Main extends JFrame {
         System.out.println("\n\n ======= This code has been provided by TheBoringEdward with the help of a fellow =======\n");
     }
 
-// TODO: Speed up rendering of polygons
-
     private static final class Draw extends JLabel implements Runnable {
 
         private double currentDegrees;
@@ -50,8 +48,8 @@ public class Main extends JFrame {
             super.paintComponent(g);
             final TransformerAndProjector c = new TransformerAndProjector(-15, 0, -4, 7, 16, 16,currentDegrees, 0, 0, "chair");
             for (int i = 0; i <= c.pol.length-1; i++) {
-                int[] px = {(int) ((c.getPol(i, 0, 1) * 10) + 400), (int) ((c.getPol(i, 1, 1) * 10) + 400), (int) ((c.getPol(i, 2, 1) * 10) + 400)};
-                int[] py = {(int) ((c.getPol(i, 0, 2) * 10) * -1 + 400), (int) ((c.getPol(i, 1, 2) * 10) * -1 + 400), (int) ((c.getPol(i, 2, 2) * 10) * -1 + 400)};
+                int[] px = {(int) ((c.getProjectedPol(i, 0, 1) * 10) + 400), (int) ((c.getProjectedPol(i, 1, 1) * 10) + 400), (int) ((c.getProjectedPol(i, 2, 1) * 10) + 400)};
+                int[] py = {(int) ((c.getProjectedPol(i, 0, 2) * 10) * -1 + 400), (int) ((c.getProjectedPol(i, 1, 2) * 10) * -1 + 400), (int) ((c.getProjectedPol(i, 2, 2) * 10) * -1 + 400)};
                 // back-face culling / winding order
                 int mass =
                         ( ((px[1]-px[0]) * ((py[1] + py[0])/2))
@@ -62,6 +60,9 @@ public class Main extends JFrame {
                     //g.drawPolygon(px,py,3);
                     g.setColor(c.polColour[i]);
                     g.fillPolygon(px, py, 3);
+                    // TODO: Create some sort array-builder which stores all the visible polygons, and then sorts them
+                    //       according to their distance to the camera. They are then drawn in that order. Most distant
+                    //       first, etc...
                 }
                 //g.setColor(Color.BLACK);
             }
