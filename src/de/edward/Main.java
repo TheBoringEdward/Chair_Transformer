@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 // Leave this in! This will be used during debugging
-import java.awt.Color;
+
 
 public class Main extends JFrame {
 
@@ -20,18 +20,6 @@ public class Main extends JFrame {
         super.setResizable(false);
 
         System.out.println("HOI!\n");
-
-        // This bit only exists for potential debugging purposes.
-        // ATM it hasn't assisted me at all, but you may never know
-        Chair c = new Chair(-8,0,-4, 2, 16, 16, 45, 0, 0);
-        for (int i = 0 ; i <= c.p.length-1 ; i++) {
-            // prints no. of point
-            System.out.println(i + 1 + ".");
-            for (int j = 0; j <= 2; j++) {
-                System.out.println(c.getP(i, j)); // 13 , 2
-            }
-            System.out.println();
-        }
     }
 
     public static void main(String[] args) {
@@ -60,7 +48,7 @@ public class Main extends JFrame {
         @Override
         protected void paintComponent(final Graphics g) {
             super.paintComponent(g);
-            final Chair c = new Chair(-15, 0, -4, 7, 16, 16,currentDegrees, 0, 0);
+            final TransformerAndProjector c = new TransformerAndProjector(-15, 0, -4, 7, 16, 16,currentDegrees, 0, 0, "chair");
             for (int i = 0; i <= c.pol.length-1; i++) {
                 int[] px = {(int) ((c.getPol(i, 0, 1) * 10) + 400), (int) ((c.getPol(i, 1, 1) * 10) + 400), (int) ((c.getPol(i, 2, 1) * 10) + 400)};
                 int[] py = {(int) ((c.getPol(i, 0, 2) * 10) * -1 + 400), (int) ((c.getPol(i, 1, 2) * 10) * -1 + 400), (int) ((c.getPol(i, 2, 2) * 10) * -1 + 400)};
