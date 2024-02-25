@@ -239,8 +239,8 @@ public class Models {
 
     // "Texture"
     Color[] chairColour = {
-            BLACK,
-            BLACK,
+            DARK_GRAY,
+            DARK_GRAY,
             CYAN,
             CYAN,
             GREEN,
@@ -268,24 +268,5 @@ public class Models {
     // 14 points
     // {x,       y,     z}
     // {towards, right, up}
-
-    // You really shouldn't save data like this. Good thing I never intend to use this for anything else...
-    // Oh yes, this array represents all the verts of the chair. Now imagine, I want to convert this to polygons...
-    double[][] chairP = {
-            {3,-2.5,0},
-            {3,2.5,0},
-            {-3,-2.5,0},
-            {-3,2.5,0},
-            {-1,-1.5,1},
-            {-1,1.5,1},
-            {3,-2.5,3},
-            {3,2.5,3},
-            {-3,-2.5,4},
-            {-3,2.5,4},
-            {-4,-1.5,5},
-            {-4,1.5,5},
-            {-4,-2.5,9},
-            {-4,2.5,9}
-    };
 
 }

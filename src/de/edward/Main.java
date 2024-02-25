@@ -93,17 +93,31 @@ public class Main extends JFrame {
                     }
                 }
             }
+            // TODO: Either learn how to use openGL, or make your own rasterisation-algorithm, as to actually
+            //       fix the depth-issue
 
-            for (int i = n-1; i >= 0; i--){
+            for (int i = n - 1; i >= 0; i--){
                 g.setColor(c.polColour[polyOrder.get(i)]);
                 g.fillPolygon(visiblePolygonsX.get(i), visiblePolygonsY.get(i), 3);
+                g.setColor(Color.BLACK);
+                g.drawPolygon(visiblePolygonsX.get(i),visiblePolygonsY.get(i),3);
             }
+            g.setColor(Color.BLUE);
+            g.drawString("Visible polygons: " + n,20,20);
+            g.drawString("Current degrees: " + currentDegrees, 20, 40);
             repaint();
         }
 
+        // this might fuck something up in the future
         @Override
         public void run() {
             currentDegrees += 0.25;
+            if (currentDegrees > 360){
+                currentDegrees = 1;
+            }
+            if (currentDegrees < 0){
+                currentDegrees = 359;
+            }
         }
     }
 }
