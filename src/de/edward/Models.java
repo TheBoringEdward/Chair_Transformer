@@ -241,8 +241,8 @@ public class Models {
     Color[] chairColour = {
             BLACK,
             BLACK,
-            BLUE,
-            BLUE,
+            CYAN,
+            CYAN,
             GREEN,
             GREEN,
             GREEN,

@@ -5,7 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-// Leave this in! This will be used during debugging
+import java.util.ArrayList;
+// Leave this in! This will be used during debugging // well thaent sidt weways
 
 
 public class Main extends JFrame {
@@ -42,11 +43,14 @@ public class Main extends JFrame {
             taskExecutor.scheduleAtFixedRate(this, 0, 15, TimeUnit.MILLISECONDS);
         }
 
-
         @Override
         protected void paintComponent(final Graphics g) {
             super.paintComponent(g);
-            final TransformerAndProjector c = new TransformerAndProjector(-15, 0, -4, 7, 16, 16,currentDegrees, 0, 0, "chair");
+            final TransformerAndProjector c = new TransformerAndProjector(-15, 0, -4, 7, 16, 16,currentDegrees, -currentDegrees, currentDegrees, "chair");
+            ArrayList<int[]> visiblePolygonsX = new ArrayList<>();
+            ArrayList<int[]> visiblePolygonsY = new ArrayList<>();
+            ArrayList<Double> distanceOfVisible = new ArrayList<>();
+            ArrayList<Integer> polyOrder = new ArrayList<>();
             for (int i = 0; i <= c.pol.length-1; i++) {
                 int[] px = {(int) ((c.getProjectedPol(i, 0, 1) * 10) + 400), (int) ((c.getProjectedPol(i, 1, 1) * 10) + 400), (int) ((c.getProjectedPol(i, 2, 1) * 10) + 400)};
                 int[] py = {(int) ((c.getProjectedPol(i, 0, 2) * 10) * -1 + 400), (int) ((c.getProjectedPol(i, 1, 2) * 10) * -1 + 400), (int) ((c.getProjectedPol(i, 2, 2) * 10) * -1 + 400)};
@@ -58,13 +62,41 @@ public class Main extends JFrame {
                         ;
                 if (mass > 0) {
                     //g.drawPolygon(px,py,3);
-                    g.setColor(c.polColour[i]);
-                    g.fillPolygon(px, py, 3);
-                    // TODO: Create some sort array-builder which stores all the visible polygons, and then sorts them
-                    //       according to their distance to the camera. They are then drawn in that order. Most distant
-                    //       first, etc...
+                    visiblePolygonsX.add(px);
+                    visiblePolygonsY.add(py);
+                    distanceOfVisible.add(c.getMidDistance(i));
+                    polyOrder.add(i);
+                    //g.setColor(c.polColour[i]);
+                    //g.fillPolygon(px, py, 3);
                 }
                 //g.setColor(Color.BLACK);
+            }
+
+            // this is horrible
+            // bubble sorter, to order visible polygons by distance to the camera
+            int n = polyOrder.toArray().length;
+            for (int i = 0; i < n - 1; i++){
+                for (int j = 0; j < n - i - 1; j++){
+                    if(distanceOfVisible.get(j) > distanceOfVisible.get(j + 1)){
+                        double tempDist = distanceOfVisible.get(j);
+                        int[] tempVPX = visiblePolygonsX.get(j);
+                        int[] tempVPY = visiblePolygonsY.get(j);
+                        int tempOrd = polyOrder.get(j);
+                        distanceOfVisible.set(j,distanceOfVisible.get(j+1));
+                        distanceOfVisible.set(j+1,tempDist);
+                        visiblePolygonsX.set(j,visiblePolygonsX.get(j+1));
+                        visiblePolygonsX.set(j+1,tempVPX);
+                        visiblePolygonsY.set(j,visiblePolygonsY.get(j+1));
+                        visiblePolygonsY.set(j+1,tempVPY);
+                        polyOrder.set(j,polyOrder.get(j+1));
+                        polyOrder.set(j+1,tempOrd);
+                    }
+                }
+            }
+
+            for (int i = n-1; i >= 0; i--){
+                g.setColor(c.polColour[polyOrder.get(i)]);
+                g.fillPolygon(visiblePolygonsX.get(i), visiblePolygonsY.get(i), 3);
             }
             repaint();
         }
