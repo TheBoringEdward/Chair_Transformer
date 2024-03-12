@@ -77,11 +77,12 @@ public class Main extends JFrame {
         private double currentYDegrees;
         private double currentZDegrees;
 
+        // start calculating task
         public Draw() {
-            // start calculating task
             final ScheduledExecutorService taskExecutor = Executors.newScheduledThreadPool(1);
-            // taskExecutor.scheduleAtFixedRate(this, 0, 15, TimeUnit.MILLISECONDS);
         }
+
+        // taskExecutor.scheduleAtFixedRate(this, 0, 15, TimeUnit.MILLISECONDS);
 
         @Override
         protected void paintComponent(final Graphics g) {
