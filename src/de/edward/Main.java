@@ -1,5 +1,7 @@
 package de.edward;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,7 +22,7 @@ public class Main extends JFrame {
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         super.setResizable(false);
 
-        System.out.println("HOI!\n");
+        System.out.println("\nHOI!\n");
     }
 
     public static void main(String[] args) {
@@ -28,6 +30,41 @@ public class Main extends JFrame {
         final Draw draw = new Draw();
         draw.setBounds(0, 0, 800, 800);
         draw.setVisible(true);
+
+        m.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_W){
+                    draw.incCurrentYDegrees(5);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_S){
+                    draw.incCurrentYDegrees(-5);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_A){
+                    draw.incCurrentZDegrees(5);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_D){
+                    draw.incCurrentZDegrees(-5);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_E){
+                    draw.incCurrentXDegrees(-5);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_Q){
+                    draw.incCurrentXDegrees(5);
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
         m.add(draw);
         m.setVisible(true);
         System.out.println("\n\n ======= This code has been provided by TheBoringEdward with the help of a fellow =======\n");
@@ -36,17 +73,20 @@ public class Main extends JFrame {
     private static final class Draw extends JLabel implements Runnable {
 
         private double currentDegrees;
+        private double currentXDegrees;
+        private double currentYDegrees;
+        private double currentZDegrees;
 
         public Draw() {
             // start calculating task
             final ScheduledExecutorService taskExecutor = Executors.newScheduledThreadPool(1);
-            taskExecutor.scheduleAtFixedRate(this, 0, 15, TimeUnit.MILLISECONDS);
+            // taskExecutor.scheduleAtFixedRate(this, 0, 15, TimeUnit.MILLISECONDS);
         }
 
         @Override
         protected void paintComponent(final Graphics g) {
             super.paintComponent(g);
-            final TransformerAndProjector c = new TransformerAndProjector(-15, 0, -4, 7, 16, 16,currentDegrees, -currentDegrees, currentDegrees, "chair");
+            final TransformerAndProjector c = new TransformerAndProjector(-15, 0, -4, 7, 16, 16,currentZDegrees, currentYDegrees, currentXDegrees, "chair");
             ArrayList<int[]> visiblePolygonsX = new ArrayList<>();
             ArrayList<int[]> visiblePolygonsY = new ArrayList<>();
             ArrayList<Double> distanceOfVisible = new ArrayList<>();
@@ -57,8 +97,8 @@ public class Main extends JFrame {
                 // back-face culling / winding order
                 int mass =
                         ( ((px[1]-px[0]) * ((py[1] + py[0])/2))
-                        + ((px[2]-px[1]) * ((py[2] + py[1])/2))
-                        + ((px[0]-px[2]) * ((py[0] + py[2])/2)))
+                                + ((px[2]-px[1]) * ((py[2] + py[1])/2))
+                                + ((px[0]-px[2]) * ((py[0] + py[2])/2)))
                         ;
                 if (mass > 0) {
                     //g.drawPolygon(px,py,3);
@@ -105,9 +145,24 @@ public class Main extends JFrame {
             g.setColor(Color.BLUE);
             g.drawString("Visible polygons: " + n,20,20);
             g.drawString("Current degrees: " + currentDegrees, 20, 40);
+            g.drawString("Current X degrees: " + currentXDegrees, 20, 60);
+            g.drawString("Current Y degrees: " + currentYDegrees, 20, 80);
+            g.drawString("Current Z degrees: " + currentZDegrees, 20, 100);
             repaint();
         }
 
+        public void incCurrentDegrees(double currentDegrees){
+            this.currentDegrees += currentDegrees;
+        }
+        public void incCurrentXDegrees(double currentXDegrees){
+            this.currentXDegrees += currentXDegrees;
+        }
+        public void incCurrentYDegrees(double currentYDegrees){
+            this.currentYDegrees += currentYDegrees;
+        }
+        public void incCurrentZDegrees(double currentZDegrees){
+            this.currentZDegrees += currentZDegrees;
+        }
         // this might fuck something up in the future
         @Override
         public void run() {
